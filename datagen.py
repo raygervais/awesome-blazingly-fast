@@ -13,12 +13,14 @@ API_USERNAME = "raygervais"
 API_TOKEN = ""
 REQUEST_TIMEOUT = 20
 LANGUAGES = [
+    "ASP",
     "Bash",
     "C",
     "C#",
     "C++",
     "Clojure",
     "CoffeeScript",
+    "Crystal",
     "D",
     "Dart",
     "Elixir",
@@ -35,6 +37,7 @@ LANGUAGES = [
     "Kotlin",
     "Lisp",
     "Lua",
+    "OCaml",
     "Perl",
     "PHP",
     "PowerShell",
@@ -45,9 +48,11 @@ LANGUAGES = [
     "Shell",
     "Swift",
     "TypeScript",
+    "V",
     "Vala",
     "Wasm",
 ]
+
 
 YEARS = [
     "2022",
@@ -96,7 +101,6 @@ def get_repositories(search_term: str) -> list:
 
 # get the repositories for the search term paginated by 100
 def get_repositories_paginated(search_term: str, page: int) -> list:
-    # Build the query string
     query_string = parse.urlencode(
         {
             "q": search_term,
@@ -108,14 +112,12 @@ def get_repositories_paginated(search_term: str, page: int) -> list:
     # Make the request
     response = execute_request_with_auth(f"{API_URL}{query_string}")
 
+    # Due to rate limiting, this is possible
     if response == None:
         return None
 
     # Parse the response
     return json.loads(response.decode("utf-8"))["items"]
-
-
-# Get repositories which comply with search term and quarter
 
 
 def get_and_cache_language_repositories(language: str, search_query: str) -> None:
@@ -168,7 +170,6 @@ def get_and_cache_language_repositories(language: str, search_query: str) -> Non
                         "w",
                     ) as f:
                         json.dump(repos, f)
-                
 
 
 if __name__ == "__main__":
